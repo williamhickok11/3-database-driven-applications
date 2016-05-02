@@ -70,8 +70,8 @@ namespace Bangazon
         //add the information that ask the customer to our payment option table
         public void CreatePaymentOption(PaymentOption paymentOption)
         {
-            string command = string.Format("INSERT INTO PaymentOption (IdCustomer, Name, AccountNumber) " +
-                "VALUES ('{0}', '{1}', '{2}')", paymentOption.IdCustomer, paymentOption.Name, paymentOption.AccountNumber);
+            string command = string.Format("INSERT INTO PaymentOption (IdPaymentOption, IdCustomer, Name, AccountNumber) " +
+                "VALUES ('{0}', '{1}', '{2}', {3})", paymentOption.IdPaymentOption, paymentOption.IdCustomer, paymentOption.Name, paymentOption.AccountNumber);
             UpdateDataBase(command);
         }
 

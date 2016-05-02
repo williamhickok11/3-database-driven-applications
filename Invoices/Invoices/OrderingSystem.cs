@@ -113,6 +113,9 @@ namespace Bangazon
             //get the IdCustomer from the Customer table
             paymentoption.IdCustomer = customer.IdCustomer;
 
+            Console.WriteLine("Enter PaymentId (e.g. 123)");
+            paymentoption.IdPaymentOption = Convert.ToInt16( Console.ReadLine() );
+
             Console.WriteLine("Enter payment type (e.g. AmEx, Visa, Checking)");
             paymentoption.Name = Console.ReadLine();
 
