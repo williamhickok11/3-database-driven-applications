@@ -211,6 +211,11 @@ namespace Bangazon
                     cProds.TheCustomer.LastName == customer.LastName)
                 {
                     customerProducts = cProds;
+
+                    if (customerProducts.Payment == null)
+                    {
+                        customerProducts.Payment = _sqlData.GetPaymentOptionForCustomer(customer);
+                    }
                 }
             }
 
