@@ -54,7 +54,6 @@ namespace Bangazon
                         SeeProductPopularity();
                         break;
                 }
-
                 key = Console.ReadLine();
             }
         }
