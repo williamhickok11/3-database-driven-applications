@@ -105,9 +105,32 @@ namespace Bangazon
 
             return productList;
         }
+
+        public void CreateCustomerOrder(CustomerProducts customerProducts)
+        {
+            DateTime now = DateTime.Now;
+            int orderNumber = (new Random()).Next(int.MaxValue);
+            //1. Add row to CustomerOrder table
+            string command = string.Format("INSERT INTO CustomerOrder (OrderNumber, DateCreated, IdCustomer, IdPaymentOption, Shipping) " +
+                "VALUES ('{0}', '{1}', '{2}', {3})", orderNumber, now.ToString(), customerProducts.TheCustomer.IdCustomer, customerProducts.Payment.IdPaymentOption, "UPS");
+            UpdateDataBase(command);
+
+            //2. Get IdOrder from CustomerOrder table
+            command = string.Format("SELECT IdCustomerOrder FROM CustomerOrder WHERE IdCustomer='{0}' AND OrderNumber='{1}'", customerProducts.TheCustomer.IdCustomer, orderNumber);
+            int idOrder = GetIdFromTable(command);
+
+            //3. Ad row to OrderProducts table
+            foreach(var product in customerProducts.Products)
+            {
+                command = string.Format("INSERT INTO OrderProducts (IdProduct, IdOrder)" +
+                    "VALUES ('{0}', '{1}')", product.IdProduct, idOrder );
+                UpdateDataBase(command);
+            }
+        }
         #endregion
 
         #region Private Methods
+
 
         private void UpdateDataBase(string commandString)
         {
@@ -120,6 +143,20 @@ namespace Bangazon
             _sqlConnection.Open();
             cmd.ExecuteNonQuery();
             _sqlConnection.Close();
+        }
+
+        private int GetIdFromTable(string commandString)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = System.Data.CommandType.Text;
+            cmd.CommandText = commandString;
+            cmd.Connection = _sqlConnection;
+
+            _sqlConnection.Open();
+            object idObj = cmd.ExecuteScalar();
+            _sqlConnection.Close();
+
+            return (int)idObj;
         }
 
         #endregion
