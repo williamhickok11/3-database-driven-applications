@@ -84,8 +84,10 @@ namespace Bangazon
         }
 
         public Customer ChooseCustomer()
-        {
+        { // Create a new list of customers
+            // Define a null reference to the customer we are going to choose
             Customer customer = null;
+            // Define a list of customers by calling the GetCustomers method
             List<Customer> customerList = _sqlData.GetCustomers();
             for (int i = 0; i < customerList.Count; i++)
             {
@@ -107,15 +109,14 @@ namespace Bangazon
         {
             //create payment option object
             Console.WriteLine("Which customer?");
+            // Choose the customer to add the payment option on
             Customer customer = ChooseCustomer();
-            CustomerProducts customerProducts = GetCustomerProducts(customer);
+            // Call GetCustomerProducts with the selected customer
+                    //  CustomerProducts customerProducts = GetCustomerProducts(customer);
             PaymentOption paymentoption = new PaymentOption();
 
-            //get the IdCustomer from the Customer table
+            //get the IdCustomer from the Customer table ADD MORE COMMENTS
             paymentoption.IdCustomer = customer.IdCustomer;
-
-            Console.WriteLine("Enter PaymentId (e.g. 123)");
-            paymentoption.IdPaymentOption = Convert.ToInt16( Console.ReadLine() );
 
             Console.WriteLine("Enter payment type (e.g. AmEx, Visa, Checking)");
             paymentoption.Name = Console.ReadLine();
@@ -123,7 +124,7 @@ namespace Bangazon
             Console.WriteLine("Enter account number ");
             paymentoption.AccountNumber = Console.ReadLine();
 
-            customerProducts.Payment = paymentoption;
+                    //  customerProducts.Payment = paymentoption;
 
             //call to update the database
             _sqlData.CreatePaymentOption(paymentoption);
@@ -156,7 +157,9 @@ namespace Bangazon
         public void OrderProducts()
         {
             Console.WriteLine("Which customer?");
+            // This calls the method to choose the customer
             Customer customer = ChooseCustomer();
+            // Pass in the current customer to get their current products
             CustomerProducts customerProducts = GetCustomerProducts(customer);
 
             Product nextProduct = null;
@@ -168,9 +171,9 @@ namespace Bangazon
                     customerProducts.Products.Add(nextProduct);
                 }
             }
-            while (nextProduct != null);
-            
+            while (nextProduct != null);   
         }
+
         public void CompleteOrder()
         {
             Console.WriteLine("Which customer?");
@@ -203,10 +206,12 @@ namespace Bangazon
         }
 
         private CustomerProducts GetCustomerProducts(Customer customer)
-        {
+        { // The method to get the products from the customer
             CustomerProducts customerProducts = null;
+            // Loop through all the products assigned to the customer
             foreach (CustomerProducts cProds in _customerProducts)
-            {
+            { 
+                // Match the current customer in the list of customers
                 if (cProds.TheCustomer.FirstName == customer.FirstName &&
                     cProds.TheCustomer.LastName == customer.LastName)
                 {
@@ -214,6 +219,7 @@ namespace Bangazon
 
                     if (customerProducts.Payment == null)
                     {
+                        // Call the method to get the payment option
                         customerProducts.Payment = _sqlData.GetPaymentOptionForCustomer(customer);
                     }
                 }

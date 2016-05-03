@@ -17,7 +17,7 @@ namespace Bangazon
             "\"C:\\Users\\William\\Documents\\Visual Studio 2015\\Projects\\exercises\\3-database-driven-applications\\Invoices\\Invoices\\Invoices.mdf\"; Integrated Security=True");
 
         #endregion
-
+        
         #region Properties
 
         #endregion
@@ -27,12 +27,14 @@ namespace Bangazon
         #endregion
 
         #region Public Methods
-
+        
         public void CreateCustomer(Customer customer)
-        {
+        { // Create a new customer
+            // Define a string to use to query the database
             string command = string.Format("INSERT INTO Customer (FirstName, LastName, StreetAdress, City, StateProvence, PostalCode, PhoneNumber) " +
                 "VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}')", customer.FirstName, customer.LastName, customer.StreetAdress,
                 customer.City, customer.StateProvence, customer.PostalCode, customer.PhoneNumber);
+            // Pass in the string to the Update Data Base method
             UpdateDataBase(command);
         }
 
@@ -41,11 +43,13 @@ namespace Bangazon
             List<Customer> customerList = new List<Customer>();
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.Text;
+            // Select the desired information from the Customer table
             cmd.CommandText = "SELECT IdCustomer, FirstName, LastName, StreetAdress, City, StateProvence, PostalCode, PhoneNumber FROM Customer";
             cmd.Connection = _sqlConnection;
 
             _sqlConnection.Open();
-            //using will clean up everything... open and close connections
+            // Using will clean up everything... open and close connections
+            // Read the database... while there is infomation to read, build a list of customers
             using (SqlDataReader dataReader = cmd.ExecuteReader())
             {
                 while (dataReader.Read())
@@ -59,7 +63,7 @@ namespace Bangazon
                     customer.StateProvence = dataReader.GetString(5);
                     customer.PostalCode = dataReader.GetString(6);
                     customer.PhoneNumber = dataReader.GetString(7);
-
+                    // Add the created customer to the list
                     customerList.Add(customer);
                 }
             }
@@ -67,20 +71,21 @@ namespace Bangazon
 
             return customerList;
         }
-        //add the information that ask the customer to our payment option table
+        
         public void CreatePaymentOption(PaymentOption paymentOption)
-        {
-            string command = string.Format("INSERT INTO PaymentOption (IdPaymentOption, IdCustomer, Name, AccountNumber) " +
-                "VALUES ('{0}', '{1}', '{2}', {3})", paymentOption.IdPaymentOption, paymentOption.IdCustomer, paymentOption.Name, paymentOption.AccountNumber);
+        { //add the information that ask the customer to our payment option table
+            string command = string.Format("INSERT INTO PaymentOption (IdCustomer, Name, AccountNumber) " +
+                "VALUES ('{0}', '{1}', '{2}')", paymentOption.IdCustomer, paymentOption.Name, paymentOption.AccountNumber);
             UpdateDataBase(command);
         }
 
         public PaymentOption GetPaymentOptionForCustomer(Customer customer)
-        {
+        { // Access the payment option WHERE the customerId matches
             PaymentOption paymentOption = null;
             
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.Text;
+            // Only access the payment option that matches with the customer we have passed in
             cmd.CommandText = string.Format("SELECT IdPaymentOption, Name, AccountNumber FROM PaymentOption " +
                 "WHERE IdCustomer = '{0}'", customer.IdCustomer);
             cmd.Connection = _sqlConnection;
@@ -91,7 +96,7 @@ namespace Bangazon
                 using (SqlDataReader dataReader = cmd.ExecuteReader())
                 {
                     if (dataReader.Read())
-                    {
+                    { // Creat a payment option object (but it is not adding to a list, so I think it just creates the last instance)
                         paymentOption = new PaymentOption();
                         paymentOption.IdPaymentOption = dataReader.GetInt32(0);
                         paymentOption.IdCustomer = customer.IdCustomer;
@@ -165,8 +170,7 @@ namespace Bangazon
 
 
         private void UpdateDataBase(string commandString)
-        {
-            //SQL Command tells the database what you're going to do (and update, an insert, a delete or a select)
+        { //SQL Command tells the database what you're going to do (and update, an insert, a delete or a select)
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.Text;
             cmd.CommandText = commandString;
