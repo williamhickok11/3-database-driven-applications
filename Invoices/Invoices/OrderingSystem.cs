@@ -18,7 +18,7 @@ namespace Bangazon
             ShowMenu();
         }
         public void ShowMenu()
-        {
+        { // Use a string builder
             Console.WriteLine("\n*********************************************************" +
                               "\n* *Welcome to Bangazon!Command Line Ordering System * *" +
                               "\n*********************************************************" +
@@ -114,7 +114,7 @@ namespace Bangazon
                     //  CustomerProducts customerProducts = GetCustomerProducts(customer);
             PaymentOption paymentoption = new PaymentOption();
 
-            //get the IdCustomer from the Customer table ADD MORE COMMENTS
+            //get the IdCustomer from the Customer table ADD MORE COMMENTS LINKING Pk and Fk
             paymentoption.IdCustomer = customer.IdCustomer;
 
             Console.WriteLine("Enter payment type (e.g. AmEx, Visa, Checking)");

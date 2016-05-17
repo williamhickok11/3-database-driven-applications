@@ -52,8 +52,9 @@ namespace Bangazon
             // Read the database... while there is infomation to read, build a list of customers
             using (SqlDataReader dataReader = cmd.ExecuteReader())
             {
-                while (dataReader.Read())
+                while (dataReader.Read()) // Reading the customer data from out table data
                 {
+                    // Creating an instance of a customer with the tabledata
                     Customer customer = new Customer();
                     customer.IdCustomer = dataReader.GetInt32(0);
                     customer.FirstName = dataReader.GetString(1);
@@ -167,8 +168,7 @@ namespace Bangazon
         #endregion
 
         #region Private Methods
-
-
+        
         private void UpdateDataBase(string commandString)
         { //SQL Command tells the database what you're going to do (and update, an insert, a delete or a select)
             SqlCommand cmd = new SqlCommand();
