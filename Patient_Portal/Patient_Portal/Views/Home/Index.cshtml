@@ -1,4 +1,4 @@
-﻿@model Patient_Portal.Models.PatientProfile
+﻿@model List<Patient_Portal.Models.PatientProfile>
 
 @{
     ViewBag.Title = "Index";
@@ -8,19 +8,16 @@
 
 <table class="table">
   
-    @*@foreach (var item in Model)
+    @foreach (var item in Model)
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.animalHabitatName)
-            </td>
+                @Html.DisplayFor(modelItem => item.PatientName)
+            </td>     
             <td>
-                @Html.DisplayFor(modelItem => item.animalSpecies)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.animal)
-            </td>
-            
+                @*Details button that passes the current patient's id into the details view method*@ 
+                @Html.ActionLink("details", "Details", new { patientId = item.IdPatientProfile })
+            </td>     
         </tr>
-    }*@
+    }
 </table>

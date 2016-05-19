@@ -1,0 +1,29 @@
+﻿@model List<Patient_Portal.ViewModels.PatientMedDetailVewModel>
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<table class="table">
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <h3>Medication:</h3>
+                @Html.DisplayFor(modelItem => item.MedicationName)
+            </td>
+            <td>
+                <h3>Price:</h3>
+                @Html.DisplayFor(modelItem => item.MedicationPrice)
+            </td>
+            <td>
+                <h3>Description:</h3>
+                @Html.DisplayFor(modelItem => item.MedicationDescription)
+            </td>
+
+        </tr>
+    }
+</table>
