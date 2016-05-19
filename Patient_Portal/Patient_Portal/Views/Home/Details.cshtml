@@ -1,4 +1,4 @@
-﻿@model List<Patient_Portal.ViewModels.PatientMedDetailVewModel>
+﻿@model List<Patient_Portal.ViewModels.PatientAilmentDetailViewModel>
 
 @{
     ViewBag.Title = "Details";
@@ -12,18 +12,23 @@
     {
         <tr>
             <td>
-                <h3>Medication:</h3>
-                @Html.DisplayFor(modelItem => item.MedicationName)
-            </td>
-            <td>
-                <h3>Price:</h3>
-                @Html.DisplayFor(modelItem => item.MedicationPrice)
-            </td>
-            <td>
-                <h3>Description:</h3>
-                @Html.DisplayFor(modelItem => item.MedicationDescription)
-            </td>
-
+                <h3>Ailment:</h3>
+                @Html.DisplayFor(modelItem => item.AilmentName)
+            </td>   
         </tr>
     }
+</table>
+
+<table class="table">
+    <tr>
+        <td>
+            @Html.ActionLink("Medication details", "MedDetails", new { patientId = Model[0].IdPatient })
+        </td>
+        <td>
+            @Html.ActionLink("Procedure details", "ProcedureDetails", new { patientId = Model[0].IdPatient })
+        </td>
+        <td>
+            @Html.ActionLink("Main Page", "Index" )
+        </td>
+    </tr>
 </table>
