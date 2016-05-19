@@ -1,0 +1,23 @@
+﻿@model List<Patient_Portal.Models.PatientProfile>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<table class="table">
+  
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.PatientName)
+            </td>     
+            <td>
+                @*Details button that passes the current patient's id into the details view method*@ 
+                @Html.ActionLink("details", "Details", new { patientId = item.IdPatientProfile })
+            </td>     
+        </tr>
+    }
+</table>

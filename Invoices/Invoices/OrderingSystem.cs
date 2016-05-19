@@ -10,6 +10,7 @@ namespace Bangazon
     {
         //create the object to use it in this class
         private SqlData _sqlData = new SqlData();
+        private List<CustomerProducts> _customerProducts = new List<CustomerProducts>();
 
         //constructor
         public OrderingSystem()
@@ -17,7 +18,7 @@ namespace Bangazon
             ShowMenu();
         }
         public void ShowMenu()
-        {
+        { // Use a string builder
             Console.WriteLine("\n*********************************************************" +
                               "\n* *Welcome to Bangazon!Command Line Ordering System * *" +
                               "\n*********************************************************" +
@@ -53,7 +54,6 @@ namespace Bangazon
                         SeeProductPopularity();
                         break;
                 }
-
                 key = Console.ReadLine();
             }
         }
@@ -83,8 +83,10 @@ namespace Bangazon
         }
 
         public Customer ChooseCustomer()
-        {
+        { // Create a new list of customers
+            // Define a null reference to the customer we are going to choose
             Customer customer = null;
+            // Define a list of customers by calling the GetCustomers method
             List<Customer> customerList = _sqlData.GetCustomers();
             for (int i = 0; i < customerList.Count; i++)
             {
@@ -106,11 +108,13 @@ namespace Bangazon
         {
             //create payment option object
             Console.WriteLine("Which customer?");
+            // Choose the customer to add the payment option on
             Customer customer = ChooseCustomer();
-
+            // Call GetCustomerProducts with the selected customer
+                    //  CustomerProducts customerProducts = GetCustomerProducts(customer);
             PaymentOption paymentoption = new PaymentOption();
 
-            //get the IdCustomer from the Customer table
+            //get the IdCustomer from the Customer table ADD MORE COMMENTS LINKING Pk and Fk
             paymentoption.IdCustomer = customer.IdCustomer;
 
             Console.WriteLine("Enter payment type (e.g. AmEx, Visa, Checking)");
@@ -118,6 +122,8 @@ namespace Bangazon
 
             Console.WriteLine("Enter account number ");
             paymentoption.AccountNumber = Console.ReadLine();
+
+                    //  customerProducts.Payment = paymentoption;
 
             //call to update the database
             _sqlData.CreatePaymentOption(paymentoption);
@@ -133,12 +139,13 @@ namespace Bangazon
             {
                 Console.WriteLine((i + 1) + ". " + productList[i].Name);
             }
+            int lastItem = productList.Count + 1;
             Console.WriteLine((productList.Count + 1) + ". Back to main menu");
 
             string chosenProduct = Console.ReadLine();
             int chosenProductId = int.Parse(chosenProduct);
             //be sure that only somebody can pick a number inside list
-            if (chosenProductId >= 0 && chosenProductId <= productList.Count)
+           if (chosenProductId >= 0 && chosenProductId <= productList.Count)
             {
                 product = productList[chosenProductId - 1];
             }
@@ -148,22 +155,83 @@ namespace Bangazon
 
         public void OrderProducts()
         {
-            List<Product> productsToOrder = new List<Product>();
+            Console.WriteLine("Which customer?");
+            // This calls the method to choose the customer
+            Customer customer = ChooseCustomer();
+            // Pass in the current customer to get their current products
+            CustomerProducts customerProducts = GetCustomerProducts(customer);
+
             Product nextProduct = null;
             do
             {
                 nextProduct = ChooseProduct();
                 if (nextProduct != null)
                 {
-                    productsToOrder.Add(nextProduct);
+                    customerProducts.Products.Add(nextProduct);
                 }
             }
-            while (nextProduct != null);
-
-
+            while (nextProduct != null);   
         }
-        public void CompleteOrder() { }
+
+        public void CompleteOrder()
+        {
+            Console.WriteLine("Which customer?");
+            Customer customer = ChooseCustomer();
+            CustomerProducts customerProducts = GetCustomerProducts(customer);
+            //foreach(CustomerProducts cProds in _customerProducts)
+            //{
+            //    if (cProds.TheCustomer.FirstName == customer.FirstName && 
+            //        cProds.TheCustomer.LastName == customer.LastName)
+            //    {
+            //    }
+            //}
+
+            Console.WriteLine(string.Format("The total is ${0}.", customerProducts.Products.Sum(x => x.Price)));
+            //decimal finalPrice = 0;
+            //foreach(Product product in customerProducts.Products)
+            //{
+            //    finalPrice += product.Price;
+            //}
+            //Console.WriteLine(finalPrice);
+
+            _sqlData.CreateCustomerOrder(customerProducts);
+        }
+
         public void SeeProductPopularity() { }
-        public void LeaveBangazon() { }
+
+        public void LeaveBangazon()
+        {
+            System.Environment.Exit(0);
+        }
+
+        private CustomerProducts GetCustomerProducts(Customer customer)
+        { // The method to get the products from the customer
+            CustomerProducts customerProducts = null;
+            // Loop through all the products assigned to the customer
+            foreach (CustomerProducts cProds in _customerProducts)
+            { 
+                // Match the current customer in the list of customers
+                if (cProds.TheCustomer.FirstName == customer.FirstName &&
+                    cProds.TheCustomer.LastName == customer.LastName)
+                {
+                    customerProducts = cProds;
+
+                    if (customerProducts.Payment == null)
+                    {
+                        // Call the method to get the payment option
+                        customerProducts.Payment = _sqlData.GetPaymentOptionForCustomer(customer);
+                    }
+                }
+            }
+
+            if (customerProducts == null)
+            {
+                customerProducts = new CustomerProducts();
+                customerProducts.TheCustomer = customer;
+                _customerProducts.Add(customerProducts);
+            }
+            
+            return customerProducts;
+        }
     }
 }
