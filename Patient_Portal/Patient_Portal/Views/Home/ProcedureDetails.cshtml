@@ -1,0 +1,35 @@
+﻿@model List<Patient_Portal.ViewModels.PatientProcedureDetailViewModel>
+@{
+    ViewBag.Title = "ProcedureDetails";
+}
+
+<h2>ProcedureDetails</h2>
+
+<table class="table">
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <h3>Ailment:</h3>
+                @Html.DisplayFor(modelItem => item.ProcedureName)
+            </td>
+            <td>
+                <h3>Ailment:</h3>
+                @Html.DisplayFor(modelItem => item.ProcedureDescription)
+            </td>
+            <td>
+                <h3>Ailment:</h3>
+                @Html.DisplayFor(modelItem => item.ProcedurePrice)
+            </td>
+        </tr>
+    }
+</table>
+
+<table>
+    <tr>
+        <td>
+            @Html.ActionLink("Main Page", "Index")
+        </td>
+    </tr>
+</table>

@@ -17,10 +17,8 @@ namespace Patient_Portal.Controllers
         public ActionResult Index()
         {
             // Get access to the patient info in the database
-            var patients = from a in _context.PatientProfile
-                          select a;
-
-            //PatientProfile CurrentPatients = new PatientProfile();
+            var patients = from p in _context.PatientProfile
+                          select p;
 
             // Pass the patients to the view
             return View(patients.ToList());
@@ -39,27 +37,53 @@ namespace Patient_Portal.Controllers
 
                                    select new PatientAilmentDetailViewModel
                                    {
-                                       AilmentName = a.AilmentName,
+                                       IdAilment = a.IdAilment,
+                                       IdPatient = patientId,
+                                       AilmentName = a.AilmentName
                                    }).ToList();
+            
+            return View(patientAilments); 
+        }
 
-
+        public ActionResult MedDetails(int patientId)
+        {
             // Get a list of all the Medications
             var patientMeds = (from m in _context.Medication
-                                   join mp in _context.MedPerscription
-                                   on m.IdMedication equals mp.IdMedication
+                               join mp in _context.MedPerscription
+                               on m.IdMedication equals mp.IdMedication
 
-                                   // Filter data by the patient clicked on
-                                   where mp.IdPatientProfile == patientId
+                               // Filter data by the patient clicked on
+                               where mp.IdPatientProfile == patientId
 
-                                   select new PatientMedDetailVewModel
-                                   {
-                                        MedicationPrice = m.MedicationPrice,
-                                        MedicationName = m.MedicationName,
-                                        MedicationDescription = m.MedicationDescription
-                                   }).ToList();
+                               select new PatientMedDetailVewModel
+                               {
+                                   MedicationPrice = m.MedicationPrice,
+                                   MedicationName = m.MedicationName,
+                                   MedicationDescription = m.MedicationDescription
+                               }).ToList();
 
             return View(patientMeds);
-            
+        }
+
+
+        public ActionResult ProcedureDetails(int patientId)
+        {
+            // Get a list of all the Medications
+            var patientProcedure = (from p in _context.Procedure
+                               join ppres in _context.ProcedurePrescription
+                               on p.IdProcedure equals ppres.IdProcedure
+
+                               // Filter data by the patient clicked on
+                               where ppres.IdPatientProfile == patientId
+
+                               select new PatientProcedureDetailViewModel
+                               {
+                                   ProcedureName = p.ProcedureName,
+                                   ProcedureDescription = p.ProcedureDescription,
+                                   ProcedurePrice = p.ProcedurePrice
+                               }).ToList();
+
+            return View(patientProcedure);
         }
     }
 }

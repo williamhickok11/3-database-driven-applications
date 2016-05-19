@@ -132,7 +132,7 @@
     <Compile Include="Models\ProcedurePrescription.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\PatientAilmentDetailViewModel.cs" />
-    <Compile Include="ViewModels\PatientFullDetailViewModel.cs" />
+    <Compile Include="ViewModels\PatientProcedureDetailViewModel.cs" />
     <Compile Include="ViewModels\PatientMedDetailVewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -146,6 +146,8 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\Details.cshtml" />
+    <Content Include="Views\Home\MedDetails.cshtml" />
+    <Content Include="Views\Home\ProcedureDetails.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
