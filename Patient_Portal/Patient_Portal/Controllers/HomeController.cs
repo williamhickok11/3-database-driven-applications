@@ -17,8 +17,8 @@ namespace Patient_Portal.Controllers
         public ActionResult Index()
         {
             // Get access to the patient info in the database
-            var patients = from a in _context.PatientProfile
-                          select a;
+            var patients = from p in _context.PatientProfile
+                          select p;
 
             //PatientProfile CurrentPatients = new PatientProfile();
 
@@ -29,6 +29,9 @@ namespace Patient_Portal.Controllers
         // Detail View that accepts the id for the patient in the argument
         public ActionResult Details(int patientId)
         {
+            var ailment = from a in _context.Ailment
+                           select a;
+
             // Get a list of all the ailments on the selected patient
             var patientAilments = (from a in _context.Ailment
                                    join ap in _context.AilmentPerscription

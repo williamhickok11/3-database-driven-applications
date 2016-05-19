@@ -23,7 +23,7 @@ namespace Patient_Portal.Models
                 .HasKey(pp => pp.IdPatientProfile);
 
             modelBuilder.Entity<Ailment>()
-                .ToTable("Department")
+                .ToTable("Ailment")
                 .HasKey(a => a.IdAilment);
 
             modelBuilder.Entity<AilmentPerscription>()
